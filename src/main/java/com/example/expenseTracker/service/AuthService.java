@@ -1,9 +1,13 @@
 package com.example.expenseTracker.service;
 
+import com.example.expenseTracker.bean.LoginRequest;
+import com.example.expenseTracker.bean.LoginResponse;
 import com.example.expenseTracker.bean.UserDetailsBean;
 import com.example.expenseTracker.entity.Role;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +16,16 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager) {
+
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     public void register(UserDetailsBean request) {
@@ -41,5 +51,20 @@ public class AuthService {
 
         userRepository.save(user);
 
+    }
+
+    public LoginResponse login(LoginRequest request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+
+        return new LoginResponse(
+                "Login successful",
+                request.getUsername()
+        );
     }
 }
