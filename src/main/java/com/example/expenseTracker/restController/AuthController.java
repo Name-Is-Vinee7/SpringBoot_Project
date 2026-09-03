@@ -1,5 +1,6 @@
 package com.example.expenseTracker.restController;
 
+import com.example.expenseTracker.bean.JwtLoginResponse;
 import com.example.expenseTracker.bean.LoginRequest;
 import com.example.expenseTracker.bean.LoginResponse;
 import com.example.expenseTracker.bean.UserDetailsBean;
@@ -37,11 +38,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<JwtLoginResponse> login(@RequestBody LoginRequest request) {
+
+        JwtLoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
-
-
-
 
 }

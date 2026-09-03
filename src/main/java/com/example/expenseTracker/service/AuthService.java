@@ -1,11 +1,14 @@
 package com.example.expenseTracker.service;
 
+import com.example.expenseTracker.bean.JwtLoginResponse;
 import com.example.expenseTracker.bean.LoginRequest;
 import com.example.expenseTracker.bean.LoginResponse;
 import com.example.expenseTracker.bean.UserDetailsBean;
 import com.example.expenseTracker.entity.Role;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.UserRepository;
+import com.example.expenseTracker.security.JWTService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +20,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JWTService jwtService;
 
     public AuthService(
             UserRepository userRepository,
@@ -53,7 +59,23 @@ public class AuthService {
 
     }
 
-    public LoginResponse login(LoginRequest request) {
+//    public LoginResponse login(LoginRequest request) {
+//
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        request.getUsername(),
+//                        request.getPassword()
+//                )
+//        );
+//
+//        return new LoginResponse(
+//                "Login successful",
+//                request.getUsername()
+//        );
+//    }
+
+
+    public JwtLoginResponse login(LoginRequest request) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -62,9 +84,10 @@ public class AuthService {
                 )
         );
 
-        return new LoginResponse(
-                "Login successful",
+        String token = jwtService.generateToken(
                 request.getUsername()
         );
+
+        return new JwtLoginResponse(token, "Bearer");
     }
 }

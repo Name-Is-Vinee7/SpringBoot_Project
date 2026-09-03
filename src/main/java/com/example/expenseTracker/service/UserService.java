@@ -3,6 +3,7 @@ package com.example.expenseTracker.service;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,6 +11,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserEntity registerUser(UserEntity userEntity) {
 
@@ -19,6 +23,7 @@ public class UserService {
 
                 if (checkUsername(userEntity.getUserName())) {
 
+                    userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
                     return userRepository.save(userEntity);
 
                 } else {
