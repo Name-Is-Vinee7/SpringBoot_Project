@@ -53,7 +53,7 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         user.setMobileNumber(request.getMobileNumber());
-        user.setRole(Role.User);
+        user.setRole(request.getRole());
 
         userRepository.save(user);
 
