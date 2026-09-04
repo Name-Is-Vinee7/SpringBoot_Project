@@ -1,11 +1,13 @@
 package com.example.expenseTracker.service;
 
 import com.example.expenseTracker.entity.ExpenseTrackerEntity;
+import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.ExpenseTrackerRepository;
+import com.example.expenseTracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -15,7 +17,27 @@ public class ExpenseTrackerService implements ETServiceImp {
     @Autowired
     private ExpenseTrackerRepository expenseTrackerRepository;
 
-    public ExpenseTrackerEntity saveExpense( ExpenseTrackerEntity expenseTrackerEntity){
+    @Autowired
+    private UserRepository userRepository;
+//    public ExpenseTrackerEntity saveExpense( ExpenseTrackerEntity expenseTrackerEntity){
+//
+//        return expenseTrackerRepository.save(expenseTrackerEntity);
+//    }
+
+    public ExpenseTrackerEntity saveExpense(ExpenseTrackerEntity expenseTrackerEntity) {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String username = authentication.getName();
+
+        UserEntity user = userRepository
+                .findByUserName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        expenseTrackerEntity.setUserExpenseId(user);
 
         return expenseTrackerRepository.save(expenseTrackerEntity);
     }
@@ -41,8 +63,23 @@ public class ExpenseTrackerService implements ETServiceImp {
     }
 
 
-    public List<ExpenseTrackerEntity> getExpense(){
-        return expenseTrackerRepository.findAll();
+//    public List<ExpenseTrackerEntity> getExpense(){
+//        return expenseTrackerRepository.findAll();
+//    }
+
+    public List<ExpenseTrackerEntity> getExpense() {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String username = authentication.getName();
+
+        UserEntity user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return expenseTrackerRepository.findByUserExpenseId(user.getUserId());
+
     }
 
     public List<ExpenseTrackerEntity> getExpensesById(String Id){
