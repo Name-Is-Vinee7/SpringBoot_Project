@@ -4,6 +4,7 @@ import com.example.expenseTracker.entity.ExpenseTrackerEntity;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.ExpenseTrackerRepository;
 import com.example.expenseTracker.repository.UserRepository;
+import com.example.expenseTracker.security.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,10 +20,10 @@ public class ExpenseTrackerService implements ETServiceImp {
 
     @Autowired
     private UserRepository userRepository;
-//    public ExpenseTrackerEntity saveExpense( ExpenseTrackerEntity expenseTrackerEntity){
-//
-//        return expenseTrackerRepository.save(expenseTrackerEntity);
-//    }
+
+    @Autowired
+    private JWTService jwtService;
+
 
     public ExpenseTrackerEntity saveExpense(ExpenseTrackerEntity expenseTrackerEntity) {
 
@@ -63,23 +64,19 @@ public class ExpenseTrackerService implements ETServiceImp {
     }
 
 
-//    public List<ExpenseTrackerEntity> getExpense(){
-//        return expenseTrackerRepository.findAll();
-//    }
+
 
     public List<ExpenseTrackerEntity> getExpense() {
 
-        Authentication authentication =
+        String authentication =
                 SecurityContextHolder
                         .getContext()
-                        .getAuthentication();
+                        .getAuthentication().getName();
 
-        String username = authentication.getName();
-
-        UserEntity user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("User not found"));
-
-        return expenseTrackerRepository.findByUserExpenseId(user.getUserId());
-
+        UserEntity userFromMobileNumber = userRepository.findByMobileNumber(authentication)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Integer userId = userFromMobileNumber.getUserId();
+        return expenseTrackerRepository.findByUserExpenseId(userFromMobileNumber);
     }
 
     public List<ExpenseTrackerEntity> getExpensesById(String Id){

@@ -23,13 +23,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    @Autowired
+
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-//    public SecurityConfig(CustomUserDetailsService userDetailsService){
-//        this.userDetailsService=userDetailsService;
-//    }
+
 
     public SecurityConfig(
             CustomUserDetailsService userDetailsService,
@@ -65,19 +63,6 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(authz -> authz
-//                        .requestMatchers("/user/authentication/register", "/user/authentication/login", "/user/authentication/authRegister","/api/addExpense").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .csrf(csrf -> csrf.disable())
-//                .httpBasic(basic -> {});
-//
-//
-//        return http.build();
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -91,7 +76,9 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/authentication/register", "/user/authentication/login", "/user/authentication/authRegister","/api/addExpense").permitAll()
+                        .requestMatchers("/user/authentication/register", "/user/authentication/login",
+                                "/user/authentication/authRegister","/api/addExpense",
+                                "/api/getExpenses").permitAll()
                         .anyRequest().authenticated()
                 )
 

@@ -2,9 +2,7 @@ package com.example.expenseTracker.service;
 
 import com.example.expenseTracker.bean.JwtLoginResponse;
 import com.example.expenseTracker.bean.LoginRequest;
-import com.example.expenseTracker.bean.LoginResponse;
 import com.example.expenseTracker.bean.UserDetailsBean;
-import com.example.expenseTracker.entity.Role;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.UserRepository;
 import com.example.expenseTracker.security.JWTService;
@@ -59,35 +57,25 @@ public class AuthService {
 
     }
 
-//    public LoginResponse login(LoginRequest request) {
-//
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getUsername(),
-//                        request.getPassword()
-//                )
-//        );
-//
-//        return new LoginResponse(
-//                "Login successful",
-//                request.getUsername()
-//        );
-//    }
-
-
     public JwtLoginResponse login(LoginRequest request) {
+
+        UserEntity user = userRepository.findByUserName(request.getMobileNumber())
+                .or(() -> userRepository.findByMobileNumber(request.getMobileNumber()))
+                .or(() -> userRepository.findByEmail(request.getMobileNumber()))
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        user.getMobileNumber(),
                         request.getPassword()
                 )
         );
 
-        String token = jwtService.generateToken(
-                request.getUsername()
-        );
+        String token = jwtService.generateToken(user.getMobileNumber());
 
         return new JwtLoginResponse(token, "Bearer");
     }
+
+
+
 }
