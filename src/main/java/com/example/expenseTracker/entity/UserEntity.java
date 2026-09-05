@@ -1,14 +1,9 @@
 package com.example.expenseTracker.entity;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.processing.Pattern;
-import org.jspecify.annotations.NonNull;
-
-import static org.springframework.security.config.http.MatcherType.regex;
 
 @Entity
 @Data
@@ -19,7 +14,7 @@ public class UserEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    private Integer userId;
     @Column(nullable = false, unique = true)
     private String userName;
     @Column(nullable = false)

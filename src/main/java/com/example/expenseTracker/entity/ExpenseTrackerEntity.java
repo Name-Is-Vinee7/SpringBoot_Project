@@ -19,7 +19,7 @@ public class ExpenseTrackerEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    private Integer expenseId;
     @NonNull
     private String category;
     @NonNull
@@ -28,4 +28,7 @@ public class ExpenseTrackerEntity {
     private double amount;
     @CreatedDate
     private Date expenseDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity userExpenseId;
 }
