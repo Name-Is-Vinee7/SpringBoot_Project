@@ -3,14 +3,19 @@ package com.example.expenseTracker.service;
 import com.example.expenseTracker.bean.JwtLoginResponse;
 import com.example.expenseTracker.bean.LoginRequest;
 import com.example.expenseTracker.bean.UserDetailsBean;
+import com.example.expenseTracker.entity.Role;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.UserRepository;
 import com.example.expenseTracker.security.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.security.auth.kerberos.KerberosKey;
 
 @Service
 public class AuthService {
@@ -51,7 +56,7 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         user.setMobileNumber(request.getMobileNumber());
-        user.setRole(request.getRole());
+        user.setRole(Role.User);
 
         userRepository.save(user);
 
@@ -64,18 +69,20 @@ public class AuthService {
                 .or(() -> userRepository.findByEmail(request.getMobileNumber()))
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getMobileNumber(),
                         request.getPassword()
                 )
         );
 
-        String token = jwtService.generateToken(user.getMobileNumber());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+//        String token = jwtService.generateToken(user.getMobileNumber());
+
+        String token = jwtService.generateToken(userDetails);
 
         return new JwtLoginResponse(token, "Bearer");
     }
-
-
 
 }

@@ -1,9 +1,11 @@
 package com.example.expenseTracker.security;
 
+import com.example.expenseTracker.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -25,18 +27,40 @@ public class JWTService {
         );
     }
 
-    public String generateToken(String username) {
+//    public String generateToken(UserEntity userEntity) {
+//
+//        Date now = new Date();
+//        Date expiryDate = new Date(now.getTime() + expiration);
+//
+//        return io.jsonwebtoken.Jwts.builder()
+//                .setSubject(userEntity.getUserName())
+//                .claim("role", userEntity.getRole().name())
+//                .setIssuedAt(now)
+//                .setExpiration(expiryDate)
+//                .signWith(getSecretKey())
+//                .compact();
+//
+//    }
+
+    public String generateToken(UserDetails userDetails) {
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration);
 
-        return io.jsonwebtoken.Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
+        Date expirationDate =
+                new Date(now.getTime() + expiration);
+
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .claim("role",
+                        userDetails.getAuthorities()
+                                .iterator()
+                                .next()
+                                .getAuthority()
+                )
+                .issuedAt(now)
+                .expiration(expirationDate)
                 .signWith(getSecretKey())
                 .compact();
-
     }
 
     public String extractUsername(String token) {
