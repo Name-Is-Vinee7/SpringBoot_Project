@@ -1,4 +1,4 @@
-package com.example.expenseTracker.bean;
+package com.example.expenseTracker.dto;
 
 import com.example.expenseTracker.entity.Role;
 import jakarta.persistence.EnumType;

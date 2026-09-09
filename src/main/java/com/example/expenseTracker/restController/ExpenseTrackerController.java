@@ -1,6 +1,5 @@
 package com.example.expenseTracker.restController;
 
-import com.example.expenseTracker.bean.ExpenseTrackerBean;
 import com.example.expenseTracker.entity.ExpenseTrackerEntity;
 import com.example.expenseTracker.service.ExpenseTrackerService;
 import org.springframework.beans.factory.annotation.Autowired;

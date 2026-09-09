@@ -1,9 +1,8 @@
 package com.example.expenseTracker.restController;
 
-import com.example.expenseTracker.bean.JwtLoginResponse;
-import com.example.expenseTracker.bean.LoginRequest;
-import com.example.expenseTracker.bean.LoginResponse;
-import com.example.expenseTracker.bean.UserDetailsBean;
+import com.example.expenseTracker.dto.response.JwtLoginResponse;
+import com.example.expenseTracker.dto.request.LoginRequest;
+import com.example.expenseTracker.dto.UserDetailsBean;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.service.AuthService;
 import com.example.expenseTracker.service.UserService;

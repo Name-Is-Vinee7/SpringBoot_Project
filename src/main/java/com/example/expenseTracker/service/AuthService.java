@@ -1,8 +1,8 @@
 package com.example.expenseTracker.service;
 
-import com.example.expenseTracker.bean.JwtLoginResponse;
-import com.example.expenseTracker.bean.LoginRequest;
-import com.example.expenseTracker.bean.UserDetailsBean;
+import com.example.expenseTracker.dto.response.JwtLoginResponse;
+import com.example.expenseTracker.dto.request.LoginRequest;
+import com.example.expenseTracker.dto.UserDetailsBean;
 import com.example.expenseTracker.entity.Role;
 import com.example.expenseTracker.entity.UserEntity;
 import com.example.expenseTracker.repository.UserRepository;
@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.security.auth.kerberos.KerberosKey;
 
 @Service
 public class AuthService {

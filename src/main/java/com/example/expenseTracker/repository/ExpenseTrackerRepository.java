@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTrackerEntity, Integer> {
 
     List<ExpenseTrackerEntity> findByUserExpenseId(UserEntity userExpenseId);
+    Optional<ExpenseTrackerEntity> findByExpenseId(Integer id);
+    void deleteById(Integer id);
 }

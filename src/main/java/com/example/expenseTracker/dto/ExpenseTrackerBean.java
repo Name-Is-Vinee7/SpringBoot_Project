@@ -1,4 +1,4 @@
-package com.example.expenseTracker.bean;
+package com.example.expenseTracker.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

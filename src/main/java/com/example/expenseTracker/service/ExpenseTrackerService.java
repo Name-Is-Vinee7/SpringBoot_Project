@@ -2,6 +2,7 @@ package com.example.expenseTracker.service;
 
 import com.example.expenseTracker.entity.ExpenseTrackerEntity;
 import com.example.expenseTracker.entity.UserEntity;
+import com.example.expenseTracker.exceptionHandling.ResourceNotFoundException;
 import com.example.expenseTracker.repository.ExpenseTrackerRepository;
 import com.example.expenseTracker.repository.UserRepository;
 import com.example.expenseTracker.security.JWTService;
@@ -32,11 +33,11 @@ public class ExpenseTrackerService implements ETServiceImp {
                         .getContext()
                         .getAuthentication();
 
-        String username = authentication.getName();
+        String mobileNumber = authentication.getName();
 
         UserEntity user = userRepository
-                .findByUserName(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found",null,true,true));
 
         expenseTrackerEntity.setUserExpenseId(user);
 
@@ -60,7 +61,13 @@ public class ExpenseTrackerService implements ETServiceImp {
     }
 
     public void deleteExpenseById(Integer id){
-        expenseTrackerRepository.deleteById(id);
+        ExpenseTrackerEntity expense = expenseTrackerRepository.findById(id).orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Expense not found", null, true, true
+                        ));
+
+        expenseTrackerRepository.delete(expense);
+//        expenseTrackerRepository.deleteById(id).orElseThrow(() -> new ResourceNotFoundException("Expense not found",null,true,true));
     }
 
 
